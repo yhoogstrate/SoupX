@@ -99,6 +99,27 @@ sc = load10X(tmpDir)
 
 This will load the 10X data into a `SoupChannel` object.  This is just a list with some special properties, storing all the information associated with a single 10X channel.  A `SoupChannel` object can also be created manually by supplying a table of droplets and a table of counts.  Assuming you have followed the above code to download the PBMC data, you could manually construct a `SoupChannel` by running,
 
+### Droplets used for the Soup
+To visualise the 
+```{r}
+data = system.file(package = "SoupX", "extdata/toyData")
+sc = load10X(data, keepDroplets=TRUE)
+plotDropletResolution(sc) +
+  ggplot2::labs(subtitle="UMIs per droplet in: SoupX toyData")
+sc = removeNoncorrectedDroplets(sc) # cleanup
+```
+
+To preserve all Droplets, you can load using `keepDroplets=TRUE`, which can be useful for QC or for optimizing the thresholds for Droplets used to build the SoupChannel. A cleanup function can be used afterwards. The thresholds can be adjusted as follows:
+
+```{r}
+sc = load10X(data, soupRange=c(55,70), keepDroplets=TRUE)
+plotDropletResolution(sc) +
+  ggplot2::labs(subtitle="UMIs per droplet in: SoupX toyData")
+sc = removeNoncorrectedDroplets(sc) # cleanup
+```
+
+### Create SoupChannel with Seurat objects
+
 ```{r load_data_manual,eval=FALSE}
 toc = Seurat::Read10X(file.path(tmpDir,'filtered_gene_bc_matrices','GRCh38'))
 tod = Seurat::Read10X(file.path(tmpDir,'raw_gene_bc_matrices','GRCh38'))

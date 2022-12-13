@@ -326,7 +326,7 @@ plotDropletResolution <- function(sc, subsample=1000000) {
     geom_point(pch=19,cex=0.15) +
     scale_y_log10() +
     scale_x_log10() +
-    labs(x="scRNA barcode [ log(rank + 1) ]", y="UMI count per barcode", subtitle=paste0("UMIs per droplet plot ", sc$channelName)) +
+    labs(x="scRNA barcode [ log(rank + 1) ]", y="UMI count per barcode") +
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank()) # in particular meaningless after subsampling
   gg
