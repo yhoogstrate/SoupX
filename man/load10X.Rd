@@ -11,6 +11,8 @@ load10X(
   readArgs = list(),
   includeFeatures = c("Gene Expression"),
   verbose = TRUE,
+  soupRange = c(0, 100),
+  keepDroplets = FALSE,
   ...
 )
 }

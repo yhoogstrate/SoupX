@@ -4,7 +4,15 @@
 \alias{SoupChannel}
 \title{Construct a SoupChannel object}
 \usage{
-SoupChannel(tod, toc, metaData = NULL, calcSoupProfile = TRUE, ...)
+SoupChannel(
+  tod,
+  toc,
+  metaData = NULL,
+  calcSoupProfile = TRUE,
+  soupRange = c(0, 100),
+  keepDroplets = FALSE,
+  ...
+)
 }
 \arguments{
 \item{tod}{Table of droplets.  A matrix with columns being each droplet and rows each gene.}

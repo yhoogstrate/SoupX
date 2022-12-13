@@ -23,7 +23,7 @@
 #' sc = SoupChannel(tod,toc,calcSoupProfile=FALSE)
 #' names(sc)
 #' @seealso SoupChannelList estimateSoup setSoupProfile setClusters
-SoupChannel = function(tod,toc,metaData=NULL,calcSoupProfile=TRUE,...){
+SoupChannel = function(tod,toc,metaData=NULL,calcSoupProfile=TRUE, soupRange=c(0,100), keepDroplets=FALSE, ... ){
   if(!is.null(metaData) & !all(sort(colnames(toc))==sort(rownames(metaData))))
     stop("Rownames of metaData must match column names of table of counts.")
   #Check that tod and toc are compatible
@@ -49,7 +49,7 @@ SoupChannel = function(tod,toc,metaData=NULL,calcSoupProfile=TRUE,...){
   class(out) = c('list','SoupChannel')
   #Estimate the soup
   if(calcSoupProfile)
-    out = estimateSoup(out)
+    out = estimateSoup(out, soupRange=soupRange, keepDroplets=keepDroplets )
   return(out)
 }
 

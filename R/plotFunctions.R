@@ -292,3 +292,42 @@ plotChangeMap = function(sc,cleanedMatrix,geneSet,DR,dataType=c('soupFrac','bina
     gg = gg + scale_colour_gradientn(colours=c('#fff5eb','#fee6ce','#fdd0a2','#fdae6b','#fd8d3c','#f16913','#d94801','#a63603','#7f2704'),limits=zLims)
   gg
 }
+
+
+#' Plots UMI counts and Droplet status (used for correction, for soup or for none)
+#'
+#' @param sc SoupChannel object.
+#' @param subsample subsample to at most this number of droplets, use 0 for including all droplets
+#' @export
+#' @return A ggplot2 containing the plot.
+plotDropletResolution <- function(sc, subsample=1000000) {
+  plt <- data.frame(UMIs.per.barcode = Matrix::colSums(sc$tod))
+  plt$dropletBarcode <- rownames(plt)
+  rownames(plt) <- NULL
+  
+  if(subsample > 0) {
+    sel <- sample(nrow(plt),min(nrow(plt),subsample))
+    plt <- plt[sel,]
+  }
+  
+  plt$rank <- order(order(-plt$UMIs.per.barcode)) + 1
+  #plt$dropletInFiltered = plt$dropletBarcode %in% colnames(sc$toc)
+  #plt$dropletInSoup = plt$dropletBarcode %in% colnames(sc$soupDroplets)
+  plt$dropletStatus = ifelse(
+    plt$dropletBarcode %in% colnames(sc$toc), "not in soup, to be corrected",
+    ifelse(
+      plt$dropletBarcode %in% sc$soupDroplets,
+      "in soup", "not in soup"
+    )
+  )
+  
+
+  gg = ggplot(plt[plt$UMIs.per.barcode >= 1,], aes(x=rank, y=UMIs.per.barcode, col=dropletStatus)) +
+    geom_point(pch=19,cex=0.15) +
+    scale_y_log10() +
+    scale_x_log10() +
+    labs(x="scRNA barcode [ log(rank + 1) ]", y="UMI count per barcode", subtitle=paste0("UMIs per droplet plot ", sc$channelName)) +
+    theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()) # in particular meaningless after subsampling
+  gg
+}

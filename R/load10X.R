@@ -16,7 +16,7 @@
 #' sc = load10X(system.file('extdata','toyData',package='SoupX'))
 #' @importFrom Seurat Read10X
 #' @importFrom utils read.csv
-load10X = function(dataDir,cellIDs=NULL,channelName=NULL,readArgs=list(),includeFeatures=c('Gene Expression'),verbose=TRUE,...){
+load10X = function(dataDir,cellIDs=NULL,channelName=NULL,readArgs=list(),includeFeatures=c('Gene Expression'),verbose=TRUE,soupRange=c(0,100), keepDroplets=FALSE,...){
   #Work out which version we're dealing with
   isV3 = dir.exists(file.path(dataDir,'raw_feature_bc_matrix'))
   isV7 = dir.exists(file.path(dataDir,'analysis','clustering','gene_expression_graphclust'))
@@ -102,6 +102,7 @@ load10X = function(dataDir,cellIDs=NULL,channelName=NULL,readArgs=list(),include
   #Get a name for the channel
   if(is.null(channelName))
     channelName = ifelse(is.null(names(dataDir)),dataDir,names(dataDir))
+  
   channel = SoupChannel(tod = dat,
                         toc = datCells,
                         metaData = mDat,
@@ -110,6 +111,8 @@ load10X = function(dataDir,cellIDs=NULL,channelName=NULL,readArgs=list(),include
                         dataType='10X',
                         isV3=isV3,
                         DR=DR,
+                        soupRange=soupRange,
+                        keepDroplets=keepDroplets,
                         ...
                         )
   return(channel)

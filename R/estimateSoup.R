@@ -19,7 +19,7 @@
 #' sc = estimateSoup(sc,keepDroplets=TRUE)
 #' #Or use non-default values
 #' sc = estimateSoup(sc,soupRange=c(60,100))
-estimateSoup = function(sc,soupRange=c(0,100),keepDroplets=FALSE){
+estimateSoup = function(sc,soupRange=c(0,100), keepDroplets=FALSE ){
   if(!is(sc,'SoupChannel'))
     stop("sc must be a SoupChannel object.")
   #Estimate the soup 
@@ -28,7 +28,11 @@ estimateSoup = function(sc,soupRange=c(0,100),keepDroplets=FALSE){
                               est = rowSums(sc$tod[,w,drop=FALSE])/sum(sc$tod[,w]),
                               counts = rowSums(sc$tod[,w,drop=FALSE]))
   #Saves a lot of space if we can drop the droplets now we're done with them
-  if(!keepDroplets)
-    sc$tod=NULL
+  if(!keepDroplets) {
+    sc = removeNoncorrectedDroplets(sc)
+  } else {
+    message("Warning: keepDroplets is enabled, yielding a large data object typically only necessary for debugging or QC")
+    sc$soupDroplets <- names(w)
+  }
   return(sc)
 }
