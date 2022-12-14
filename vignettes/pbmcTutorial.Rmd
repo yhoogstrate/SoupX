@@ -118,6 +118,17 @@ plotDropletResolution(sc) +
 sc = removeNoncorrectedDroplets(sc) # cleanup
 ```
 
+### Sample spike-in Droplets from the Soup
+
+```{r}
+sc = load10X(system.file(package = "SoupX", "extdata/toyData"), keepDroplets=TRUE)
+expected.count = round(median(Matrix::colSums(sc$toc)))
+si = spikeInTheSoupChannel(sc,target.spikein.droplet.count= expected.count)
+plot(sort(Matrix::colSums(si)))
+removeNoncorrectedDroplets(sc)
+```
+
+
 ### Create SoupChannel with Seurat objects
 
 ```{r load_data_manual,eval=FALSE}
